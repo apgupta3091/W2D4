@@ -1,21 +1,33 @@
 # Write a method, least_common_multiple, that takes in two numbers and returns the smallest number that is a mutiple
 # of both of the given numbers
 def least_common_multiple(num_1, num_2)
-
+    num_1.lcm(num_2)
 end
 
 
 # Write a method, most_frequent_bigram, that takes in a string and returns the two adjacent letters that appear the
 # most in the string.
 def most_frequent_bigram(str)
-
+    all_bigrams = []
+    hash = Hash.new(0)
+    (0...str.length - 1).each do |i|
+        all_bigrams << str[i] + str[i + 1]
+    end
+    all_bigrams.each do |bigram|
+        hash[bigram] += 1
+    end
+    hash.key(hash.values.max)
 end
 
 
 class Hash
     # Write a method, Hash#inverse, that returns a new hash where the key-value pairs are swapped
     def inverse
-
+        hash = {}
+        self.each do |k,v|
+            hash[v] = k
+        end
+        return hash
     end
 end
 
@@ -23,7 +35,15 @@ end
 class Array
     # Write a method, Array#pair_sum_count, that takes in a target number returns the number of pairs of elements that sum to the given target
     def pair_sum_count(num)
-
+        count = 0
+        (0...self.length - 1).each do |i|
+            (i + 1...self.length).each do |j|
+                if self[i] + self[j] == num 
+                    count += 1
+                end
+            end
+        end
+        count
     end
 
     # Write a method, Array#bubble_sort, that takes in an optional proc argument.
@@ -40,6 +60,33 @@ class Array
     #
     # This should remind you of the spaceship operator! Convenient :)
     def bubble_sort(&prc)
+        if prc != nil 
+            sorted = false
+            while !sorted 
+                sorted = true 
+                (0...self.length - 1).each do |i|
+                    (i + 1...self.length).each do |j|
+                        if prc.call(self[i],self[j]) == -1
+                            self[i],self[j] = self[j],self[i]
+                            sorted = false 
+                        end
 
+                    end
+                end
+            end
+        else
+            sorted = false
+            while !sorted 
+                (0...self.length - 1).each do |i|
+                    (i + 1...self.length).each do |j|
+                        if self[i] > self[j]
+                            self[j],self[i] = self[i],self[j]
+                            sorted = false 
+                        end
+                    end
+                end
+        end
+        end
+        self
     end
 end
