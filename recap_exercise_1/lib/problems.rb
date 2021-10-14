@@ -6,8 +6,25 @@
 #
 # all_vowel_pairs(["goat", "action", "tear", "impromptu", "tired", "europe"])   # => ["action europe", "tear impromptu"]
 def all_vowel_pairs(words)
-
+    arr = []
+    vowels = "aeiou"
+    vowels_arr = vowels.split("")
+    i = 0 
+    while i < words.length - 1 
+        j = i + 1
+        while j < words.length
+            new_str = words[i] + " " + words[j]
+            if vowels_arr.all? {|vowel| new_str.include?(vowel)}
+                arr << new_str
+            end
+        j += 1 
+        end
+        i += 1
+    end
+    arr
 end
+
+
 
 
 # Write a method, composite?, that takes in a number and returns a boolean indicating if the number
@@ -18,7 +35,8 @@ end
 # composite?(9)     # => true
 # composite?(13)    # => false
 def composite?(num)
-
+    return false if num < 2
+    (2...num).any? {|factors| num % factors == 0}
 end
 
 
@@ -32,7 +50,17 @@ end
 # find_bigrams("the theater is empty", ["cy", "em", "ty", "ea", "oo"])  # => ["em", "ty", "ea"]
 # find_bigrams("to the moon and back", ["ck", "oo", "ha", "at"])        # => ["ck", "oo"]
 def find_bigrams(str, bigrams)
-
+    arr = []
+    str_arr = str.split(" ")
+    str_arr.each do |word|
+        bigrams.each do |bigram|
+            if word.include?(bigram)
+                arr << bigram 
+            end
+        end
+    end
+    arr.sort_by { |bigram| bigrams.index(bigram)}
+    
 end
 
 class Hash
@@ -50,7 +78,21 @@ class Hash
     # hash_2.my_select { |k, v| k + 1 == v }      # => {10=>11, 5=>6, 7=>8})
     # hash_2.my_select                            # => {4=>4}
     def my_select(&prc)
-
+        new_hash = {}
+        def_prc = Proc.new{|k,v| k == v}
+        self.each do |k, v|
+            if prc != nil 
+                if prc.call(k,v)
+                    new_hash[k] = v
+                end
+            else
+                if def_prc.call(k,v)
+                    new_hash[k] = v
+                end
+            end
+            
+        end
+        new_hash
     end
 end
 
@@ -64,7 +106,18 @@ class String
     # "cats".substrings     # => ["c", "ca", "cat", "cats", "a", "at", "ats", "t", "ts", "s"]
     # "cats".substrings(2)  # => ["ca", "at", "ts"]
     def substrings(length = nil)
-
+        substrings = []
+        self.each_char.with_index do |char, i|
+            (i...self.length).each do |j|
+                substrings << char + self[i + 1..j]
+            end
+        
+        end
+        if length == nil    
+            return substrings
+        else
+            return substrings.select {|substring| substring.length == length}
+        end
     end
 
 
@@ -78,6 +131,13 @@ class String
     # "bootcamp".caesar_cipher(2) #=> "dqqvecor"
     # "zebra".caesar_cipher(4)    #=> "difve"
     def caesar_cipher(num)
-
+        alpha = ('abcdefghijklmnopqrstuvwxyz')
+        str = ""
+        self.each_char do |char|
+            alpha_idx = alpha.index(char)
+            new_idx = (alpha_idx + num) % 26
+            str += alpha[new_idx]
+        end
+        str
     end
 end
